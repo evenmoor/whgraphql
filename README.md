@@ -38,3 +38,52 @@ This is a basic graphql system so the documentation for the available resolvers 
 When the vm is running, the contents of the repo are mounted as /mnt so modifying the files in the directory will allow you to extend/modify the system.
 
 Resolvers are in /mnt/app/graphq/schemas/warmahordes.js
+
+## Example Queries
+### Add Model
+```
+mutation{
+  addModel( input : {
+    name : "woo",
+    str : 12,
+    mat : 5,
+    rat : 5,
+    def : 13,
+    arm : 19
+  }){
+    success,
+    error,
+    doc {
+      name
+    }
+  }
+}
+```
+
+### Find Models
+```
+{
+  models(filter : { name : "find me?" }) {
+    success,
+    error,
+    docs{
+      _id
+      name
+      str
+      mat
+      rat
+      def
+      arm
+    }
+  }
+}
+```
+
+### Clear Data
+```
+mutation{
+  clear_data(input : { collection : "models" }){
+    success
+  }
+}
+```
