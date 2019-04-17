@@ -3,6 +3,7 @@ const express = require('express'); //express as a quick web server
 const graphqlHTTP = require('express-graphql'); //graphql for express
 const graphql = require('graphql'); //actual graphql
 const MongoClient = require('mongodb').MongoClient; //mongo
+const routes = require('./routes');//handle routing for non-graph items
 
 const _app = express();
 _db = "";//globally expose the database connection. NEVER DO THIS IN PRODUCTION!
@@ -18,10 +19,7 @@ _app.use('/graph', graphqlHTTP({
 	graphiql: true
 }));
 
-//handle any other request
-_app.get('*', function (req, res) {
-	res.send('Express is running. GraphQL should be accessible at /graph');
-})
+_app.use('/', routes);
 
 // connect to mongo
 MongoClient.connect(app.config.database.location, { useNewUrlParser: true }, function(err, client) {
