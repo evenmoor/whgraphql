@@ -19,14 +19,23 @@ _app.use('/graph', graphqlHTTP({
 	graphiql: true
 }));
 
+//expose the assets directory for static file access
+_app.use(express.static('/mnt/app/assets'));
+
+//mount our fancy routes
 _app.use('/', routes);
 
 // connect to mongo
 MongoClient.connect(app.config.database.location, { useNewUrlParser: true }, function(err, client) {
 	assert.equal(null, err);
-	console.log("Connected successfully to mongo server");
 	_db = client.db(app.config.database.name);
 });
 
+//build a new server for socket.io
+const _http = require('http').Server(_app);
+
+//add socket.io rooms
+const _io = require('./webSockets').listen(_http);
+
 //start the express app listening
-_app.listen(app.config.system.port, () => console.log(`App listening on ${app.config.system.port}!`));
+_http.listen(app.config.system.port, () => console.log(`App listening on ${app.config.system.port}!`));
